@@ -45,8 +45,10 @@ The sidebar on the left hand side contains all the app controls.
   - LEDs. These were all modelled as square light sources. The length in brackets refers to the edge length of the square.
 - **Total Optical Power (mW)** sets the total power output from the light source. The user can type values in to the box. You can also use the clicker icons, or scroll the mouse wheel to change the value by 0.1 mW at a time.
 - **Threshold Irradiance (mW/mm^2)** sets the irradiance value to draw the contour line at. The user can type values in to the box. You can also use the clicker icons, or scroll the mouse wheel to change the value by 0.1 mW at a time.
-- **Download Plot** button will save the currently displayed plot as a .png file. The filename is automatically generated:
-  - {SourceInfo}\_{TissueType}_{Wavelength}nm_P{SourcePower}_T{ThresholdValue}.png
+- **Download Plot** button will save the currently displayed plot as a .png file. The filename is automatically generated.
+  - General format: {SourceInfo}\_{TissueType}_{Wavelength}nm_P{SourcePower}_T{ThresholdValue}.png
+  - LED example: L_0500_W_480nm_P1-00_T1-00.png
+  - Optical fibre example: OF_0200_37_G580nm_P2-30_T1-30.png
   - Decimal points in {SourcePower} are replaced by hyphens (-)
 
 ## Outputs
@@ -59,3 +61,14 @@ The following summary data are included below the contour plot:
 - **Forward spread** is the maximum distance 'forwards' from the light source (i.e. positive depth value on the y-axis) with irradiance equal to or greater than the threshold value.
 - **Backward spread** is the maximum distance 'backwards' from the light source (i.e. positive depth value on the y-axis) with irradiance equal to or greater than the threshold value.
 - **Lateral spread** is the maximum distance 'sideways' from the light source (i.e. distance on the x-axis) with irradiance equal to or greater than the threshold value. The full extent of lateral spread is twice this value.
+
+## Limitations
+These are discussed extensively in the paper. A shortened list is given here:
+- The max irradiance values calculated for the LED sources below are drastically underestimated. This is because the key dimension of these sources is equal to or less than the resolution of the original model (10 µm).
+  - LED (1 µm)
+  - LED (2 µm)
+  - LED (5 µm)
+  - LED (10 µm)
+- Higher optical power values and lower irradiance threshold values may result in contours that do not fit within the 2~mm~x~2~mm plot region. When this occurs the max irradiance value is still correct, but the volume illuminated calculation will be incorrect. Values for forward, backward, and lateral spread will not increase beyond 1.00 mm either and so the relevant parameters will be incorrect when contours do not fit within the plot region.
+- As contour lines get closer to the edge of the plot region, they tend to become more ragged. The reported values for light spread in these cases will overestimate the 'true' spread of light. For example, in the figure below backward spread is reported to be 0.58~mm but I would offer approximately 0.4~mm as a more resonable estimate in this instance.
+  - ![image](https://github.com/qboesley/optical-irradiance-contour-viewer/assets/127060519/cc944169-9181-4889-a23f-6c99f45bdc20)
