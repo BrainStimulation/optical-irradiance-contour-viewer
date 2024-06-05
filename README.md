@@ -69,6 +69,7 @@ These are discussed extensively in the paper. A shortened list is given here:
   - LED (2 µm)
   - LED (5 µm)
   - LED (10 µm)
-- Higher optical power values and lower irradiance threshold values may result in contours that do not fit within the 2~mm~x~2~mm plot region. When this occurs the max irradiance value is still correct, but the volume illuminated calculation will be incorrect. Values for forward, backward, and lateral spread will not increase beyond 1.00 mm either and so the relevant parameters will be incorrect when contours do not fit within the plot region.
-- As contour lines get closer to the edge of the plot region, they tend to become more ragged. The reported values for light spread in these cases will overestimate the 'true' spread of light. For example, in the figure below backward spread is reported to be 0.58~mm but I would offer approximately 0.4~mm as a more resonable estimate in this instance.
-  - ![image](https://github.com/qboesley/optical-irradiance-contour-viewer/assets/127060519/cc944169-9181-4889-a23f-6c99f45bdc20)
+- Higher optical power values and lower irradiance threshold values may result in contours that do not fit within the 2&nbsp;mm&nbsp;x&nbsp;2&nbsp;mm plot region. When this occurs the max irradiance value is still correct, but the volume illuminated calculation will be incorrect. Values for forward, backward, and lateral spread will not increase beyond 1.00 mm either and so the relevant parameters will be incorrect when contours do not fit within the plot region.
+- As contour lines get closer to the edge of the plot region, they tend to become more ragged. The reported values for light spread in these cases will overestimate the 'true' spread of light. For example, in the figure below backward spread is reported to be 0.58&nbsp;mm but I would offer approximately 0.4&nbsp;mm as a more resonable estimate in this instance.
+  - ![image](https://github.com/qboesley/optical-irradiance-contour-viewer/assets/127060519/62dc05fa-a252-477e-8bf1-ffccccea0158)
+
