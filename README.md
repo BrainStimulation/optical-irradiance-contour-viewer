@@ -17,7 +17,7 @@ This repository contains the files and instructions to run the app locally. It r
 6) Download the files "app.r", "grey.mat", and "white.mat"
   - Put "app.r" in the "OptoContourViewer" folder: C:\Users\qboesley\Documents\RShinyApps\OptoContourViewer\app.r
   - Put "grey.mat" and "white.mat" in the "data" folder: C:\Users\qboesley\Documents\RShinyApps\OptoContourViewer\data\grey.mat & C:\Users\qboesley\Documents\RShinyApps\OptoContourViewer\data\white.mat
-6) Run R and change your working directory to the folder "RShinyApps" you made in step 2, by clicking on "File" in the toolbar and choosing "Change dir...".
+6) Run R and change your working directory to the folder "RShinyApps" you made in step 2, by clicking on "File" in the toolbar and choosing "Change dir...".<br/>
 ![image](https://github.com/qboesley/optical-irradiance-contour-viewer/assets/127060519/20e75cc2-803b-46dd-bc31-67fac6f5a0d9)
 7) Before you run the app for the first time input the following commands into the R console:
   ```
