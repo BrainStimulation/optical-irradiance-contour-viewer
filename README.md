@@ -4,35 +4,54 @@ This app uses RShiny to visualise contour plots from my paper [PAPER NAME]
 An online version is hosted at [LINK] and can be used directly in a web browser. 
 
 This repository contains the files and instructions to run the app locally. It requires R to be installed on your system, and the shiny, bslib, and R.matlab packages.
-
-# Setup Instructions - Windows
-
-1) If you don't have R, go to https://cran.r-project.org/mirrors.html and choose an appropriate mirror to download from. The app was developed on R version 4.4.0, it may work on different versions but I haven't tested it.
-2) Create a folder somewhere to use as your R working directory.
-  - E.g. C:\Users\qboesley\Documents\RShinyApps
-4) Inside this folder, create a folder named "OptoContourViewer".
-  - C:\Users\qboesley\Documents\RShinyApps\OptoContourViewer
-5) Inside this folder, create a folder named "data".
-  - C:\Users\qboesley\Documents\RShinyApps\OptoContourViewer\data
-6) Download the files "app.r", "grey.mat", and "white.mat"
-  - Put "app.r" in the "OptoContourViewer" folder: C:\Users\qboesley\Documents\RShinyApps\OptoContourViewer\app.r
-  - Put "grey.mat" and "white.mat" in the "data" folder: C:\Users\qboesley\Documents\RShinyApps\OptoContourViewer\data\grey.mat & C:\Users\qboesley\Documents\RShinyApps\OptoContourViewer\data\white.mat
-6) Run R and change your working directory to the folder "RShinyApps" you made in step 2, by clicking on "File" in the toolbar and choosing "Change dir...".<br/>
-![image](https://github.com/qboesley/optical-irradiance-contour-viewer/assets/127060519/20e75cc2-803b-46dd-bc31-67fac6f5a0d9)
-7) Before you run the app for the first time input the following commands into the R console:
-  ```
-  install.packages("shiny")
-  install.packages("bslib")
-  install.packages("R.matlab")
-  ```
-8) To start the app run the following commands in the R console:
-  ```
-  library(shiny)
-  runApp("OptoContourViewer")
-  ```
-  The app should open in your system default web browser. It has been tested in Firefox. 
   
 ![image](https://github.com/qboesley/optical-irradiance-contour-viewer/assets/127060519/cf03471a-7c12-40cd-8b0d-93b6e5eba49e)
+
+# Get started
+
+## Prerequisites
+
+- R: you can [download it from a mirror here](https://cran.r-project.org/mirrors.html). Tested on v4.4.0.
+
+## Run
+
+First, download this repository to your local machine into a folder called `optical-irradiance-contour-viewer/`. You can do this in one step by [cloning this repository](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository).
+
+Next, run the app using one of the following methods.
+
+### Using command line
+
+1. Open your command line or terminal and navigate to the `optical-irradiance-contour-viewer/` directory.
+1. Run the following command:
+
+    ```sh
+    Rscript run.R
+    ```
+
+1. Once it has finished installing packages and loading the app, go to the URL printed in the terminal using any browser. It will look something like `http://127.0.0.1:XXXX`.
+
+### Using RGui
+
+1. Run R, which willl open the R graphical user interface (GUI).
+1. `File` > `Change dir...` > select the `optical-irradiance-contour-viewer/` directory.
+
+    ![image](https://github.com/qboesley/optical-irradiance-contour-viewer/assets/127060519/20e75cc2-803b-46dd-bc31-67fac6f5a0d9)
+
+1. Run the following command in the console window:
+    
+    ```r
+    source("run.R")
+    ```
+
+To quit, press `ctrl+C` on the RGui console to stop the app, then type `q()` to quit the console.
+
+
+### Using RStudio
+
+1. Install [RStudio](https://posit.co/downloads/).
+1. Open RStudio, and select `File` > `Open Project...`. Select the `optical-irradiance-contour-viewer/` folder and `Open`.
+1. In the `Files` navigator, click `run.R` to open it.
+1. Click `Run App` (green arrow in top-right corner of top-left quadrant). Once it has finished installing and loading the app, a new window will appear with the viewer.
 
 # Using the App
 ## Input Options
