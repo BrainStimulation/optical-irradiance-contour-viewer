@@ -8,10 +8,13 @@ This repository contains the files and instructions to run the app locally. It r
 # Setup Instructions - Windows
 
 1) If you don't have R, go to https://cran.r-project.org/mirrors.html and choose an appropriate mirror to download from. The app was developed on R version 4.4.0, it may work on different versions but I haven't tested it.
-2) Create a folder somewhere to use as your R working directory. E.g. C:\Users\qboesley\Documents\RShinyApps
-3) Inside this folder, create a folder named "OptoContourViewer". C:\Users\qboesley\Documents\RShinyApps\OptoContourViewer
-4) Inside this folder, create a folder named "data". C:\Users\qboesley\Documents\RShinyApps\OptoContourViewer\data
-5) Download the files "app.r", "grey.mat", and "white.mat"
+2) Create a folder somewhere to use as your R working directory.
+  - E.g. C:\Users\qboesley\Documents\RShinyApps
+4) Inside this folder, create a folder named "OptoContourViewer".
+  - C:\Users\qboesley\Documents\RShinyApps\OptoContourViewer
+5) Inside this folder, create a folder named "data".
+  - C:\Users\qboesley\Documents\RShinyApps\OptoContourViewer\data
+6) Download the files "app.r", "grey.mat", and "white.mat"
   - Put "app.r" in the "OptoContourViewer" folder: C:\Users\qboesley\Documents\RShinyApps\OptoContourViewer\app.r
   - Put "grey.mat" and "white.mat" in the "data" folder: C:\Users\qboesley\Documents\RShinyApps\OptoContourViewer\data\grey.mat & C:\Users\qboesley\Documents\RShinyApps\OptoContourViewer\data\white.mat
 6) Run R and change your working directory to the folder "RShinyApps" you made in step 2, by clicking on "File" in the toolbar and choosing "Change dir...".
