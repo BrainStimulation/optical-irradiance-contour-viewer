@@ -37,7 +37,7 @@ This repository contains the files and instructions to run the app locally. It r
 # Using the App
 ## Input Options
 The sidebar on the left hand side contains all the app controls. 
--**Tissue Type** toggles between the grey matter and white matter simulation datasets.
+- **Tissue Type** toggles between the grey matter and white matter simulation datasets.
 - **Wavelength (nm)** toggles between the source wavelengths used in the simulations.
   - Note that 580 nm light is actually yellow rather than green, but it is plotted in green here for better visibility.
 - **Light Source** is a drop down menu to select particular light sources. There are two main source types:
@@ -46,7 +46,7 @@ The sidebar on the left hand side contains all the app controls.
 - **Total Optical Power (mW)** sets the total power output from the light source. The user can type values in to the box. You can also use the clicker icons, or scroll the mouse wheel to change the value by 0.1 mW at a time.
 - **Threshold Irradiance (mW/mm^2)** sets the irradiance value to draw the contour line at. The user can type values in to the box. You can also use the clicker icons, or scroll the mouse wheel to change the value by 0.1 mW at a time.
 - **Download Plot** button will save the currently displayed plot as a .png file. The filename is automatically generated:
-  - {SourceInfo}_{TissueType}_{Wavelength}nm_P{SourcePower}_T{ThresholdValue}.png
+  - {SourceInfo}\_{TissueType}_{Wavelength}nm_P{SourcePower}_T{ThresholdValue}.png
   - Decimal points in {SourcePower} are replaced by hyphens (-)
 
 ## Outputs
