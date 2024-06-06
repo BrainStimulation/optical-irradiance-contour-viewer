@@ -9,9 +9,9 @@ w <- readMat("data/white.mat")
 
 # User interface ----
 ui <- page_sidebar(
-  title = "Optogenetics Contour Visualiser",
+  title = "Optogenetics Contour Visualiser [PAPER TITLE, CITATION INFO, & DOI HERE]",
   sidebar = sidebar(
-    title = "Options",
+    title = "Input Options",
     # Tissue type radio buttons
     radioButtons(
       "tissue",
@@ -74,33 +74,29 @@ ui <- page_sidebar(
       min = 0,
       step = 0.1
     ),
+    # gridline checkbox
+    checkboxInput(
+      "drawgridlines",
+      "Show Gridlines",
+      value = TRUE
+    ),
     # plot download button
     downloadButton(
       "downloadPlot",
       "Download Plot"
     )
   ),
-  
-  layout_column_wrap(
-    width = "600px",
-    height = "600px",
-    fixed_width = TRUE,
+  # plot and data cards
+  layout_columns(
     card(
-      card_header("Irradiance Contour"), 
-      card_body(plotOutput("pdata", width = "100%", height = "600px"))
-      )
-  ),
-  layout_column_wrap(
-    width = "600px",
-    fixed_width = TRUE,
+      card_body(plotOutput("pdata", width = "100%", height = "500"))
+    ),
     card(
-      card_header("Summary Data"),
       card_body(verbatimTextOutput("tdata"))
-    )
+    ),
+    col_widths = c(7, 5)
   )
 )
-
-
 
 # Server logic
 server <- function(input, output) {
@@ -191,8 +187,16 @@ server <- function(input, output) {
     )
     title(main = sprintf("%s in %s @ %s nm\nPower: %.2f mW - Threshold: %.2f mW/mm^2", input$source, input$tissue, input$wavelength, input$power, input$threshold),
           xlab = "Lateral spread (mm)",
-          ylab = "Depth (mm)")
+          ylab = "Depth (mm)",
+          sub = "CITATION INFO HERE")
     par(new=TRUE)
+    # grid lines
+    if(input$drawgridlines == TRUE){
+      abline(v=(seq(-1, 1, length.out = 21)), col = 'lightgray', lty = 'dotted')
+      abline(h=(seq(-1, 1, length.out = 21)), col = 'lightgray', lty = 'dotted')
+      abline(v=(seq(-1, 1, length.out = 5)), col = 'lightgray')
+      abline(h=(seq(-1, 1, length.out = 5)), col = 'lightgray')
+    }
     # coordinates to draw source surface
     sx <- switch(
       input$source,
@@ -219,6 +223,7 @@ server <- function(input, output) {
     )
     sy <- c(0, 0)
     lines(sx, sy, xlim = c(-1, 1), ylim = c(-1, 1))
+
   })
   
   #CONTOUR PLOT - Function, for generating png to download
@@ -246,8 +251,16 @@ server <- function(input, output) {
     )
     title(main = sprintf("%s in %s @ %s nm\nPower: %.2f mW - Threshold: %.2f mW/mm^2", input$source, input$tissue, input$wavelength, input$power, input$threshold),
           xlab = "Lateral spread (mm)",
-          ylab = "Depth (mm)")
+          ylab = "Depth (mm)",
+          sub = "CITATION INFO HERE")
     par(new=TRUE)
+    # grid lines
+    if(input$drawgridlines == TRUE){
+      abline(v=(seq(-1, 1, length.out = 21)), col = 'lightgray', lty = 'dotted')
+      abline(h=(seq(-1, 1, length.out = 21)), col = 'lightgray', lty = 'dotted')
+      abline(v=(seq(-1, 1, length.out = 5)), col = 'lightgray')
+      abline(h=(seq(-1, 1, length.out = 5)), col = 'lightgray')
+    }
     # coordinates to draw source surface
     sx <- switch(
       input$source,
@@ -297,21 +310,21 @@ server <- function(input, output) {
     # volume over threshold
     mask <- sliceData >= input$threshold
     vol <- 0
-    for(i in (colSums(mask))){
-      vol <- vol + dr * (pi * (dr*i)^2)
+    cs = colSums(mask)
+    for(i in (cs)){
+      vol <- vol + dr * (pi * (dr*i*0.5)^2)
     }
     # spread distance in mm
-    cs = colSums(mask)
     rs = rowSums(mask)
     cfirst <- min(which(cs > 0))
     clast <- max(which(cs > 0))
     rfirst <- min(which(rs > 0))
     fspread <- (clast - 100) * dr
-    bspread <- (100 - cfirst) * dr
+    bspread <- (101 - cfirst) * dr
     if(bspread < 0){
       bspread <- 0
     }
-    lspread <- (100 - rfirst) * dr
+    lspread <- (101 - rfirst) * dr
     # display data on app card
     str_irr <- sprintf("Max Irradiance:\t  %.2f mW/mm^2", dmax)
     str_volume <- sprintf("\nVol. illuminated: %.3f mm^3", vol)
@@ -353,9 +366,14 @@ server <- function(input, output) {
         "White matter" = "W",
         "Grey matter" = "G"
       )
+      if(input$drawgridlines == TRUE){
+        grd_str = "on"
+      }else{
+        grd_str = "off"
+      }
       pow_str <- gsub("\\.", "-", sprintf("%.2f", input$power))
       thr_str <- gsub("\\.", "-", sprintf("%.2f", input$threshold))
-      sprintf("%s_%s_%snm_P%s_T%s.png", s_str, t_str, input$wavelength, pow_str, thr_str)
+      sprintf("%s_%s_%snm_P%s_T%s_G%s.png", s_str, t_str, input$wavelength, pow_str, thr_str, grd_str)
     },
     content = function(file){
       png(file)
