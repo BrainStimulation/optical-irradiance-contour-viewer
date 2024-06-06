@@ -5,7 +5,8 @@ An online version is hosted at [LINK] and can be used directly in a web browser.
 
 This repository contains the files and instructions to run the app locally. It requires R to be installed on your system, and the shiny, bslib, and R.matlab packages.
   
-![image](https://github.com/qboesley/optical-irradiance-contour-viewer/assets/127060519/cf03471a-7c12-40cd-8b0d-93b6e5eba49e)
+![image](https://github.com/qboesley/optical-irradiance-contour-viewer/assets/127060519/0f7e125a-0d88-4c43-b6e2-976d54c2fa30)
+
 
 # Get started
 
@@ -78,14 +79,17 @@ The sidebar on the left hand side contains all the app controls.
   - LEDs. These were all modelled as square light sources. The length in brackets refers to the edge length of the square.
 - **Total Optical Power (mW)** sets the total power output from the light source. The user can type values in to the box. You can also use the clicker icons, or scroll the mouse wheel to change the value by 0.1 mW at a time.
 - **Threshold Irradiance (mW/mm^2)** sets the irradiance value to draw the contour line at. The user can type values in to the box. You can also use the clicker icons, or scroll the mouse wheel to change the value by 0.1 mW at a time.
+- **Show Gridlines** turns gridlines on or off on the plot. Lines are plotted in 0.1 mm intervals.
 - **Download Plot** button will save the currently displayed plot as a .png file. The filename is automatically generated.
-  - General format: {SourceInfo}\_{TissueType}_{Wavelength}nm_P{SourcePower}_T{ThresholdValue}.png
-  - LED example: `L_0500_W_480nm_P1-00_T1-00.png` is the 500 µm edge length LED source in white matter at 480 nm with 1 mW source power and a contour line at 1 mW/mm^2
-  - Optical fibre example: `OF_0200_37_G580nm_P2-30_T1-30.png` is the 200 µm diameter, NA = 0.37, optical fibre source in grey matter at 580 nm with 2.3 mW source power and a contour line at 1.3 mW/mm^2.
+  - General format: {SourceInfo}\_{TissueType}_{Wavelength}nm_P{SourcePower}_T{ThresholdValue}_G{GridlineStatus}.png
+  - LED example: `L_0500_W_480nm_P1-00_T1-00_Gon.png` is the 500 µm edge length LED source in white matter at 480 nm with 1 mW source power and a contour line at 1 mW/mm^2 with gridlines.
+  - Optical fibre example: `OF_0200_37_G580nm_P2-30_T1-30_Goff.png` is the 200 µm diameter, NA = 0.37, optical fibre source in grey matter at 580 nm with 2.3 mW source power and a contour line at 1.3 mW/mm^2 with no gridlines.
   - Decimal points in {SourcePower} are replaced by hyphens (-)
 
 ## Outputs
 Whenever any options are changed the contour plot and summary data are updated automatically.
+
+If the app window is resized the aspect ratio of the contour plot will change. Updating any of the input options will redraw the plot with a square aspect ratio again.
 
 The light source dimensions (diamter for optical fibres, edge length for LEDs) are drawn on the plot as a black horizontal line. 
 The following summary data are included below the contour plot:
@@ -103,6 +107,7 @@ These are discussed extensively in the paper. A shortened list is given here:
   - LED (5 µm)
   - LED (10 µm)
 - Higher optical power values and lower irradiance threshold values may result in contours that do not fit within the 2&nbsp;mm&nbsp;x&nbsp;2&nbsp;mm plot region. When this occurs the max irradiance value is still correct, but the volume illuminated calculation will be incorrect. Values for forward, backward, and lateral spread will not increase beyond 1.00 mm either and so the relevant parameters will be incorrect when contours do not fit within the plot region.
-- As contour lines get closer to the edge of the plot region, they tend to become more ragged. The reported values for light spread in these cases will overestimate the 'true' spread of light. For example, in the figure below backward spread is reported to be 0.58&nbsp;mm but I would offer approximately 0.4&nbsp;mm as a more resonable estimate in this instance.
-  - ![image](https://github.com/qboesley/optical-irradiance-contour-viewer/assets/127060519/62dc05fa-a252-477e-8bf1-ffccccea0158)
+- As contour lines get closer to the edge of the plot region, they tend to become more ragged. The reported values for light spread in these cases will overestimate the 'true' spread of light. For example, in the figure below backward spread is reported to be 0.59&nbsp;mm but I would offer approximately 0.45&nbsp;mm as a more resonable estimate in this instance.
+![image](https://github.com/qboesley/optical-irradiance-contour-viewer/assets/127060519/4849e3c1-7523-49f0-bc3d-7b57f028eccd)
+
 
