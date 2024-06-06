@@ -15,19 +15,28 @@ This repository contains the files and instructions to run the app locally. It r
 
 ## Run
 
-First, download this repository to your local machine into a folder called `optical-irradiance-contour-viewer/`. You can do this in one step by [cloning this repository](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository).
+First, download this repository to your local machine into a folder called `optical-irradiance-contour-viewer/`. You can do this in one step by [cloning this repository](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository). 
+
+If you don't know what that means, you can download the repository manually from the main page as a .zip file and extract it where ever you like. ![image](https://github.com/qboesley/optical-irradiance-contour-viewer/assets/127060519/8d9e048e-2a88-4eef-ba84-6fbb45413547)
+
 
 Next, run the app using one of the following methods.
 
 ### Using command line
 
 1. Open your command line or terminal and navigate to the `optical-irradiance-contour-viewer/` directory.
-1. Run the following command:
+1. On Mac and Linux systems run the following command:
 
     ```sh
     Rscript run.R
     ```
 
+1. On Windows systems run the following command (assuming R is installed in the default location, if you have installed R in a different location then set the directory to the location of Rscript.exe). 
+
+    ```sh
+    “C:\Program Files\R\R-4.4.0\bin\Rscript.exe” run.R
+    ```
+  
 1. Once it has finished installing packages and loading the app, go to the URL printed in the terminal using any browser. It will look something like `http://127.0.0.1:XXXX`.
 
 ### Using RGui
@@ -43,15 +52,20 @@ Next, run the app using one of the following methods.
     source("run.R")
     ```
 
-To quit, press `ctrl+C` on the RGui console to stop the app, then type `q()` to quit the console.
+The first time you run the command you may get a pop-up window asking "Would you like to use a personal library instead?". Click yes and another pop-up may appear asking "Would you like to create a personal library 'DIRECTORY' to install packages into?". Click yes again and R will continue downloading and installing the necessary packages. 
 
+To quit, press `ctrl+C` or `esc` on the RGui console to stop the app, then type `q()` to quit the console.
 
 ### Using RStudio
 
 1. Install [RStudio](https://posit.co/downloads/).
-1. Open RStudio, and select `File` > `Open Project...`. Select the `optical-irradiance-contour-viewer/` folder and `Open`.
-1. In the `Files` navigator, click `run.R` to open it.
-1. Click `Run App` (green arrow in top-right corner of top-left quadrant). Once it has finished installing and loading the app, a new window will appear with the viewer.
+1. Open RStudio, and select `Settings` > `Set Working Directory` > `Choose Directory`. Select the `optical-irradiance-contour-viewer/` folder and `Open`.
+1. To run the app the first time, run the following command in the console:
+   ```
+   source("run.R")
+   ```
+1. To run the app again, go to the `Files` navigator and click on `app.R`. The app code will open in a panel in RStudio.
+1. Click `Run App` (green arrow in top-right corner of top-left quadrant). A new window will appear with the app running.
 
 # Using the App
 ## Input Options
@@ -66,8 +80,8 @@ The sidebar on the left hand side contains all the app controls.
 - **Threshold Irradiance (mW/mm^2)** sets the irradiance value to draw the contour line at. The user can type values in to the box. You can also use the clicker icons, or scroll the mouse wheel to change the value by 0.1 mW at a time.
 - **Download Plot** button will save the currently displayed plot as a .png file. The filename is automatically generated.
   - General format: {SourceInfo}\_{TissueType}_{Wavelength}nm_P{SourcePower}_T{ThresholdValue}.png
-  - LED example: L_0500_W_480nm_P1-00_T1-00.png
-  - Optical fibre example: OF_0200_37_G580nm_P2-30_T1-30.png
+  - LED example: `L_0500_W_480nm_P1-00_T1-00.png` is the 500 µm edge length LED source in white matter at 480 nm with 1 mW source power and a contour line at 1 mW/mm^2
+  - Optical fibre example: `OF_0200_37_G580nm_P2-30_T1-30.png` is the 200 µm diameter, NA = 0.37, optical fibre source in grey matter at 580 nm with 2.3 mW source power and a contour line at 1.3 mW/mm^2.
   - Decimal points in {SourcePower} are replaced by hyphens (-)
 
 ## Outputs
