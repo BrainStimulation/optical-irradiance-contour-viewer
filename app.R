@@ -4,7 +4,6 @@ library(bslib)
 library(R.matlab)
 
 # load slice data for plots
-# d <- readMat("data/RData.mat")
 g <- readMat("data/grey.mat")
 w <- readMat("data/white.mat")
 
@@ -86,12 +85,21 @@ ui <- page_sidebar(
     width = "600px",
     height = "600px",
     fixed_width = TRUE,
-    card(card_header("Irradiance Contour"), card_body(
-      plotOutput("pdata", width = "100%", height = "600px"),
-      verbatimTextOutput("tdata")
-    ))
+    card(
+      card_header("Irradiance Contour"), 
+      card_body(plotOutput("pdata", width = "100%", height = "600px"))
+      )
+  ),
+  layout_column_wrap(
+    width = "600px",
+    fixed_width = TRUE,
+    card(
+      card_header("Summary Data"),
+      card_body(verbatimTextOutput("tdata"))
+    )
   )
 )
+
 
 
 # Server logic
@@ -152,7 +160,6 @@ server <- function(input, output) {
     }
     
     # slice index
-    # sliceIndex = (ti - 1) * 60 + (wi - 1) * 20 + si
     sliceIndex = (wi - 1) * 20 + si
     
     # output vector
@@ -165,7 +172,7 @@ server <- function(input, output) {
     pcolour <- switch(
       input$wavelength,
       "480" = "blue",#accurate colour is #00d5ff
-      "580" = "green",#note in reality it is yellow ffff00
+      "580" = "green",#note in reality it is yellow #ffff00
       "640" = "#ff2100" #accurate to 640 nm
       #https://academo.org/demos/wavelength-to-colour-relationship/
     )
