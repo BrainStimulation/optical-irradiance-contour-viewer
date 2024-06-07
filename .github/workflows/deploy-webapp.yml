@@ -35,5 +35,4 @@ jobs:
       - name: Install dependencies
         shell: bash
         run: |
-          pwd
-          /usr/bin/Rscript viewer/src/install.R
+          sudo /usr/bin/Rscript viewer/src/install.R
