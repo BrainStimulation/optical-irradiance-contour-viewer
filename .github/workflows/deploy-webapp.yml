@@ -33,7 +33,7 @@ jobs:
         with:
           path: webapp
       - name: Install dependencies
-        shell: shell
+        shell: bash
         run: |
           pwd
           /usr/bin/Rscript viewer/src/install.R
