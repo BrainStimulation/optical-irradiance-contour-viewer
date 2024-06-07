@@ -32,8 +32,8 @@ jobs:
         uses: actions/checkout@v4
         with:
           path: webapp
-      - name: Install libarchive-dev
-        run: sudo apt-get install -y libarchive-dev
+      - name: Install libarchive-dev and curl
+        run: sudo apt-get install -y libarchive-dev curl
       - name: Install dependencies
         shell: bash
         run: |
