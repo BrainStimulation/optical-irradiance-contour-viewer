@@ -47,7 +47,8 @@ jobs:
         shell: bash
         run: |
           cd webapp
+          git status
           git add .
-          git ci -m "Latest changes for web application."
+          git commit -m "Latest changes for web application."
           git push origin main
           
