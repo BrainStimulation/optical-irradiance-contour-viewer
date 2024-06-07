@@ -36,3 +36,16 @@ jobs:
         shell: bash
         run: |
           sudo /usr/bin/Rscript viewer/src/install.R
+      - name: Build web application
+        shell: Rscript {0}
+        run: shinylive::export(appdir = "viewer/src", destdir = "webapp")
+      - run: git config --global user.email "actions@github.com"
+      - run: git config --global user.name "actions"
+      - name: Commit changes and push to website
+        shell: bash
+        run: |
+          cd webapp
+          git add .
+          git ci -m "Latest changes for web application."
+          git push origin main
+          
