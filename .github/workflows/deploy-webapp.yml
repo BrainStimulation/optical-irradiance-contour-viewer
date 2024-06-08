@@ -50,6 +50,7 @@ jobs:
         run: |
           cd webapp
           echo "something" > index.html
+          git remote -v
           git status
           git add .
           git commit -m "Latest changes for web application."
