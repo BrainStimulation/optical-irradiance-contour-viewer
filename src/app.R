@@ -4,8 +4,8 @@ library(bslib)
 library(R.matlab)
 
 # load slice data for plots
-g <- readMat(url("https://github.com/BrainStimulation/optical-irradiance-contour-data/raw/main/grey.mat"))
-w <- readMat(url("https://github.com/BrainStimulation/optical-irradiance-contour-data/raw/main/white.mat"))
+g <- readMat(url("data/grey.mat"))
+w <- readMat(url("data/white.mat"))
 
 # User interface ----
 ui <- page_sidebar(
