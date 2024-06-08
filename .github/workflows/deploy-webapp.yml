@@ -31,7 +31,7 @@ jobs:
       - name: Checkout Web App
         uses: actions/checkout@v4
         with:
-          repository: optical-irradiance-contour-webapp
+          repository: BrainStimulation/optical-irradiance-contour-webapp
           path: webapp
           token: ${{ secrets.PUSH_WEB_APP_TOKEN }}
       - name: Install libarchive-dev and libcurl4-openssl-dev
