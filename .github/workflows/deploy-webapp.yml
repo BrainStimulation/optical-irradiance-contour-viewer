@@ -34,11 +34,6 @@ jobs:
           repository: BrainStimulation/optical-irradiance-contour-webapp
           path: webapp
           token: ${{ secrets.PUSH_WEB_APP_TOKEN }}
-      - name: Checkout Data
-        uses: actions/checkout@v4
-        with:
-          repository: BrainStimulation/optical-irradiance-contour-data
-          path: data
       - name: Install libarchive-dev and libcurl4-openssl-dev
         run: sudo apt-get install -y libarchive-dev libcurl4-openssl-dev
       - name: Install dependencies
@@ -54,8 +49,8 @@ jobs:
         shell: bash
         run: |
           mkdir -p webapp/data
-          cp data/grey.mat webapp/data/
-          cp data/white.mat webapp/data/
+          curl -X GET -L "https://api.figshare.com/v2/file/download/46963453" --output webapp/data/grey.mat
+          curl -X GET -L "https://api.figshare.com/v2/file/download/46963456" --output webapp/data/white.mat
       - name: Commit changes and push to website
         shell: bash
         run: |
