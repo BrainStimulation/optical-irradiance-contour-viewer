@@ -49,8 +49,9 @@ jobs:
         shell: bash
         run: |
           mkdir -p webapp/data
-          curl -X GET -L "https://api.figshare.com/v2/file/download/46963453" --output webapp/data/grey.mat
-          curl -X GET -L "https://api.figshare.com/v2/file/download/46963456" --output webapp/data/white.mat
+          curl -X GET -L "https://api.figshare.com/v2/file/download/46963453" --output webapp/data/grey.mat -s &
+          curl -X GET -L "https://api.figshare.com/v2/file/download/46963456" --output webapp/data/white.mat -s &
+          wait
       - name: Commit changes and push to website
         shell: bash
         run: |
