@@ -5,7 +5,6 @@ library(R.matlab)
 # load slice data for plots
 g <- readMat(url("https://brainstimulation.github.io/optical-irradiance-contour-webapp/data/grey.mat"))
 w <- readMat(url("https://brainstimulation.github.io/optical-irradiance-contour-webapp/data/white.mat"))
-
 # User interface ----
 ui <- page_sidebar(
   title = "Optogenetics Contour Visualiser [PAPER TITLE, CITATION INFO, & DOI HERE]",
