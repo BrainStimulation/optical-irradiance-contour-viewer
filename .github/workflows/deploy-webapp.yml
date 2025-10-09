@@ -39,6 +39,7 @@ jobs:
       - name: Install dependencies
         shell: bash
         run: |
+          sudo apt install r-base r-base-dev -y
           sudo /usr/bin/Rscript viewer/src/install.R
       - name: Build web application
         shell: Rscript {0}
