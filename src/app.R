@@ -143,6 +143,7 @@ server <- function(input, output) {
   
   #absorption coefficient
   ua <- reactive({
+    req(input$tissue, input$wavelength)
     # ua
     if (input$tissue == "White matter") {
       val <- switch(
@@ -163,6 +164,8 @@ server <- function(input, output) {
   
   # index to access from data arrays
   sliceIndex <- reactive({ 
+    req(input$source, input$wavelength, input$tissue)
+    
     # source index
     si <- switch(
       input$source,
@@ -207,6 +210,7 @@ server <- function(input, output) {
   
   # array of data for contour and irradiance plots
   sliceData <- reactive({ 
+    req(input$tissue, input$power, w$white, g$grey)
     arr <- switch(
       input$tissue,
       "White matter" = (input$power * w$white[, , sliceIndex()]) / (ua() * 0.000001),
@@ -216,7 +220,8 @@ server <- function(input, output) {
     
   # x coordinates to plot source on contour plot
   sx <- reactive({ 
-      val <- switch(
+    req(input$source)  
+    val <- switch(
         input$source,
         "LED (1 µm)" = c(-0.0005, 0.0005),
         "LED (2 µm)" = c(-0.001, 0.001),
@@ -243,7 +248,8 @@ server <- function(input, output) {
   
   # summary data calculation for contour plot
   cData <- reactive({ 
-      # max irradiance
+    req(input$threshold)  
+    # max irradiance
       dmax <- max(sliceData())
       # volume over threshold
       mask <- sliceData() >= input$threshold
@@ -270,7 +276,8 @@ server <- function(input, output) {
   
   # data for filenames of downloaded plot figures
   fnameData <- reactive({
-      s_str <- switch(
+    req(input$source, input$tissue, input$drawgridlines, input$drawirrsliceline, input$power, input$threshold, input$irrslider, input$wavelength)  
+    s_str <- switch(
         input$source,
         "LED (1 µm)" = "L-0001",
         "LED (2 µm)" = "L-0002",
@@ -317,7 +324,8 @@ server <- function(input, output) {
     
   #CONTOUR PLOT - Reactive, for display in app
   draw_contour_r <- reactive({
-      # contour plot
+    req(input$threshold, input$source, input$tissue, input$wavelength, input$power, input$drawgridlines, input$drawirrsliceline, input$irrslider)  
+    # contour plot
       contour(
         seq(-1, 1, length.out = 200),
         seq(-1, 1, length.out = 200),
@@ -360,7 +368,7 @@ server <- function(input, output) {
     
   #CONTOUR PLOT - Function, for generating png to download
   draw_contour_f <- function(){
-      # contour plot
+    # contour plot
       contour(
         seq(-1, 1, length.out = 200),
         seq(-1, 1, length.out = 200),
@@ -408,7 +416,8 @@ server <- function(input, output) {
     
   # IRRADIANCE LINE PLOT - reactive
   draw_irr_r <- reactive({
-      sindex <- (input$irrslider + 1)*100 + 1
+    req(input$irrslider, input$irrslicelogplot, input$threshold, input$drawgridlines)  
+    sindex <- (input$irrslider + 1)*100 + 1
       if(sindex > 200){
         sindex <- 200
       }
@@ -501,7 +510,7 @@ server <- function(input, output) {
     
   # DOWNLOAD CONTOUR PLOT
   output$downloadcontourplot <- downloadHandler(
-      filename <- function(){
+    filename <- function(){
         sprintf("%s_%s_%snm_P%s_T%s_G%s_S%s_X%smm_CONTOUR.png", fnameData()[1], fnameData()[2], fnameData()[3], fnameData()[4], fnameData()[5], fnameData()[6], fnameData()[7], fnameData()[8])
       },
       content = function(file){
