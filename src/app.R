@@ -129,6 +129,7 @@ ui <- page_sidebar(
 server <- function(input, output) {
   
   # REACTIVE EXPRESSIONS FOR VARIABLES IN PLOTTING AND DOWNLOADING FUNCTIONS
+  req(input$wavelength)
   
   # colour of contour line  
   pcolour <- reactive({
