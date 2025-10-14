@@ -34,21 +34,13 @@ jobs:
           repository: BrainStimulation/optical-irradiance-contour-webapp
           path: webapp
           token: ${{ secrets.PUSH_WEB_APP_TOKEN }}
-      - name: Install libarchive-dev and libcurl4-openssl-dev
-        run: sudo apt-get install -y libarchive-dev libcurl4-openssl-dev
-      - name: Pin CRAN repository to ensure correct R version
-        run: |
-          echo "Package: *" | sudo tee /etc/apt/preferences.d/99-cran-r-pin
-          echo "Pin: release o=CRAN" | sudo tee -a /etc/apt/preferences.d/99-cran-r-pin
-          echo "Pin-Priority: 700" | sudo tee -a /etc/apt/preferences.d/99-cran-r-pin
-      - name: Set up r2u
-        run: |
-          sudo apt-get update -qq
-          sudo apt-get install --no-install-recommends software-properties-common dirmngr
-          wget -q -O- https://eddelbuettel.github.io/r2u/assets/dirk_eddelbuettel_key.asc | sudo tee -a /etc/apt/trusted.gpg.d/cranapt_key.asc
-          echo "deb [arch=amd64] https://r2u.stat.illinois.edu/ubuntu noble main" | sudo tee /etc/apt/sources.list.d/cranapt.list
-          sudo apt-get update
-          sudo apt-get install --no-install-recommends r-base r-cran-tidyverse
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
+          r-version: renv
+          
+      - uses: r-lib/actions/setup-renv@v2
+      
       - name: Install dependencies
         shell: bash
         run: |
