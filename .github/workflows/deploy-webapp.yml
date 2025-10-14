@@ -36,6 +36,11 @@ jobs:
           token: ${{ secrets.PUSH_WEB_APP_TOKEN }}
       - name: Install libarchive-dev and libcurl4-openssl-dev
         run: sudo apt-get install -y libarchive-dev libcurl4-openssl-dev
+      - name: Pin CRAN repository to ensure correct R version
+        run: |
+          echo "Package: *" | sudo tee /etc/apt/preferences.d/99-cran-r-pin
+          echo "Pin: release o=CRAN" | sudo tee -a /etc/apt/preferences.d/99-cran-r-pin
+          echo "Pin-Priority: 700" | sudo tee -a /etc/apt/preferences.d/99-cran-r-pin
       - name: Set up r2u
         run: |
           sudo apt-get update -qq
