@@ -41,13 +41,9 @@ jobs:
           use-public-rspm: true
           
       - name: Install dependencies
-        shell: bash
-        run: |
-          # sudo apt update && sudo apt install r-base r-base-dev -y
-          # sudo /usr/bin/Rscript viewer/src/install.R
-          # sudo /usr/bin/Rscript --version
-          Rscript --version
-          Rscript viewer/src/install.R
+        uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          extra-packages: any::shinylive, any::shiny, any::bslib, any::R.matlab, 
       
       - name: Clean destination
         shell: bash
