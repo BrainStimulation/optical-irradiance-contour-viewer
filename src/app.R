@@ -124,6 +124,8 @@ ui <- page_sidebar(
   card(
     card_body(verbatimTextOutput("tdata"))
   )
+  hr()
+  textOutput("version_info")
 )
 # Server logic
 server <- function(input, output) {
@@ -548,6 +550,18 @@ server <- function(input, output) {
       paste(str_irr, str_volume, str_fspread, str_bspread, str_lspread)
       
     })
+
+  # RENDER VERSION INFO
+  output$version_info <- renderText({
+    
+    # Read environment variables with a fallback for local development
+    build_date <- Sys.getenv("BUILD_DATE", unset = "local")
+    git_sha <- Sys.getenv("GIT_SHA", unset = "dev")
+    
+    # Combine them into a single string
+    paste("Build:", build_date, "|", git_sha)
+  })
+  
 }
 # Run the app
 app <- shinyApp(ui = ui, server = server)
