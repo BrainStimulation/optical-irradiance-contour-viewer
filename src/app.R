@@ -511,7 +511,7 @@ server <- function(input, output) {
     
   # DOWNLOAD CONTOUR PLOT
   output$downloadcontourplot <- downloadHandler(
-    filename <- function(){
+    filename = function(){
         sprintf("%s_%s_%snm_P%s_T%s_G%s_S%s_X%smm_CONTOUR.png", fnameData()[1], fnameData()[2], fnameData()[3], fnameData()[4], fnameData()[5], fnameData()[6], fnameData()[7], fnameData()[8])
       },
       content = function(file){
@@ -523,7 +523,7 @@ server <- function(input, output) {
     
   # DOWNLOAD IRRADIANCE PLOT
   output$downloadirrplot <- downloadHandler(
-    filename <- function(){
+    filename = function(){
       if(input$irrslicelogplot == TRUE){
         sprintf("%s_%s_%snm_P%s_T%s_G%s_S%s_X%smm_IRRADIANCE_LOG.png", fnameData()[1], fnameData()[2], fnameData()[3], fnameData()[4], fnameData()[5], fnameData()[6], fnameData()[7], fnameData()[8])
       }else{
