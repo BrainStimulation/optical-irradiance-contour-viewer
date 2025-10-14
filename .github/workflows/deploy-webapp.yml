@@ -36,10 +36,18 @@ jobs:
           token: ${{ secrets.PUSH_WEB_APP_TOKEN }}
       - name: Install libarchive-dev and libcurl4-openssl-dev
         run: sudo apt-get install -y libarchive-dev libcurl4-openssl-dev
+      - name: Set up r2u
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install --no-install-recommends software-properties-common dirmngr
+          wget -q -O- https://eddelbuettel.github.io/r2u/assets/dirk_eddelbuettel_key.asc | sudo tee -a /etc/apt/trusted.gpg.d/cranapt_key.asc
+          echo "deb [arch=amd64] https://r2u.stat.illinois.edu/ubuntu noble main" | sudo tee /etc/apt/sources.list.d/cranapt.list
+          sudo apt-get update
+          sudo apt-get install --no-install-recommends r-base r-cran-tidyverse
       - name: Install dependencies
         shell: bash
         run: |
-          sudo apt update && sudo apt install r-base r-base-dev -y
+          # sudo apt update && sudo apt install r-base r-base-dev -y
           sudo /usr/bin/Rscript viewer/src/install.R
           sudo /usr/bin/Rscript --version
       - name: Clean destination
