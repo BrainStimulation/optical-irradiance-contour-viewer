@@ -42,8 +42,10 @@ jobs:
         shell: bash
         run: |
           # sudo apt update && sudo apt install r-base r-base-dev -y
-          sudo /usr/bin/Rscript viewer/src/install.R
-          sudo /usr/bin/Rscript --version
+          # sudo /usr/bin/Rscript viewer/src/install.R
+          # sudo /usr/bin/Rscript --version
+          Rscript --version
+          Rscript viewer/src/install.R
       
       - name: Clean destination
         shell: bash
