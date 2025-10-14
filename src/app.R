@@ -123,8 +123,8 @@ ui <- page_sidebar(
   # summary data
   card(
     card_body(verbatimTextOutput("tdata"))
-  )
-  hr()
+  ),
+  hr(),
   textOutput("version_info")
 )
 # Server logic
