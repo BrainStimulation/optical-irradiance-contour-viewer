@@ -128,11 +128,9 @@ ui <- page_sidebar(
 # Server logic
 server <- function(input, output) {
   
-  # REACTIVE EXPRESSIONS FOR VARIABLES IN PLOTTING AND DOWNLOADING FUNCTIONS
-  req(input$wavelength)
-  
   # colour of contour line  
   pcolour <- reactive({
+    req(input$wavelength)
     colour <- switch(
       input$wavelength,
       "480" = "blue",#accurate colour is #00d5ff
