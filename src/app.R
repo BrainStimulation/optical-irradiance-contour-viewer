@@ -369,6 +369,7 @@ server <- function(input, output) {
     
   #CONTOUR PLOT - Function, for generating png to download
   draw_contour_f <- function(){
+    req(input$threshold, input$source, input$tissue, input$wavelength, input$power, input$drawgridlines, input$drawirrsliceline, input$irrslider)
     # contour plot
       contour(
         seq(-1, 1, length.out = 200),
@@ -462,48 +463,49 @@ server <- function(input, output) {
     
   # IRRADIANCE LINE PLOT - function
   draw_irr_f <- function(){
-      sindex <- (input$irrslider + 1)*100 + 1
-      if(sindex > 200){
-        sindex <- 200
-      }
-      lineData <- sliceData()[sindex,]
-      if(input$irrslicelogplot == TRUE){
-        plot( # irradiance profile
-          lineData,
-          seq(-1, 1, length.out = 200),
-          main = "Irradiance as Function of Depth",
-          xlab = "Log10 Irradiance (mW/mm^2)",
-          ylab = "Depth (mm)",
-          col = 'purple',
-          log='x'
-          # sub = "CITATION INFO HERE" 
-        )
-      }else{
-        plot( # irradiance profile
-          lineData,
-          seq(-1, 1, length.out = 200),
-          main = "Irradiance as Function of Depth",
-          xlab = "Irradiance (mW/mm^2)",
-          ylab = "Depth (mm)",
-          col = 'purple',
-          # sub = "CITATION INFO HERE" 
-        )
-      }
-      lines( # irradiance threshold
-        c(input$threshold, input$threshold),
-        c(-1, 1),
-        xlim = c(-1, 1),
-        ylim = c(-1, 1),
-        lty = 'dotted'
-      )
-      par(new=TRUE)
-      # grid lines
-      if(input$drawgridlines == TRUE){
-        abline(h=(seq(-1, 1, length.out = 21)), col = 'lightgray', lty = 'dotted')
-        abline(h=(seq(-1, 1, length.out = 5)), col = 'lightgray')
-      }
+    req(input$irrslider, input$irrslicelogplot, input$threshold, input$drawgridlines) 
+    sindex <- (input$irrslider + 1)*100 + 1
+    if(sindex > 200){
+      sindex <- 200
     }
-    
+    lineData <- sliceData()[sindex,]
+    if(input$irrslicelogplot == TRUE){
+      plot( # irradiance profile
+        lineData,
+        seq(-1, 1, length.out = 200),
+        main = "Irradiance as Function of Depth",
+        xlab = "Log10 Irradiance (mW/mm^2)",
+        ylab = "Depth (mm)",
+        col = 'purple',
+        log='x'
+        # sub = "CITATION INFO HERE" 
+      )
+    }else{
+      plot( # irradiance profile
+        lineData,
+        seq(-1, 1, length.out = 200),
+        main = "Irradiance as Function of Depth",
+        xlab = "Irradiance (mW/mm^2)",
+        ylab = "Depth (mm)",
+        col = 'purple',
+        # sub = "CITATION INFO HERE" 
+      )
+    }
+    lines( # irradiance threshold
+      c(input$threshold, input$threshold),
+      c(-1, 1),
+      xlim = c(-1, 1),
+      ylim = c(-1, 1),
+      lty = 'dotted'
+    )
+    par(new=TRUE)
+    # grid lines
+    if(input$drawgridlines == TRUE){
+      abline(h=(seq(-1, 1, length.out = 21)), col = 'lightgray', lty = 'dotted')
+      abline(h=(seq(-1, 1, length.out = 5)), col = 'lightgray')
+    }
+  }
+  
   # IRRADIANCE LINE PLOT - renderPlot
   output$irrplotdata <- renderPlot({
       draw_irr_r()
