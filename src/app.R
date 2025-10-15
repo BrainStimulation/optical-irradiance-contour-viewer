@@ -6,8 +6,10 @@ library(shiny)
 library(tibble)
 
 # load slice data for plots
-g <- readMat(url("https://brainstimulation.github.io/optical-irradiance-contour-webapp/data/grey.mat"))
-w <- readMat(url("https://brainstimulation.github.io/optical-irradiance-contour-webapp/data/white.mat"))
+#g <- readMat(url("https://brainstimulation.github.io/optical-irradiance-contour-webapp/data/grey.mat"))
+#w <- readMat(url("https://brainstimulation.github.io/optical-irradiance-contour-webapp/data/white.mat"))
+g <- readMat("data/grey.mat")
+w <- readMat("data/white.mat")
 
 source_map <- tribble(
         ~label,            ~index, ~filename_str,   ~coordsx1, ~coordsx2,
@@ -207,7 +209,7 @@ server <- function(input, output) {
       cs = colSums(mask)
       dr = 0.01
       for(i in (cs)){
-        vol <- vol + dr * (pi * (dr*i*0.5)^2)
+        vol <- vol + dr * (pi * (dr * i * 0.5)^2)
       }
       # spread distance
       rs = rowSums(mask)
@@ -226,7 +228,7 @@ server <- function(input, output) {
   
   # data for filenames of downloaded plot figures
   fnameData <- reactive({
-    req(input$tissue, input$power, input$threshold, input$irrslider, input$wavelength)  
+    req(input$tissue, input$power, input$threshold, input$irrslider, input$wavelength, !is.null(input$drawgridlines), !is.null(input$drawirrsliceline), !is.null(input$irrslicelogplot))
     list(
       source = selected_source_data()$filename_str,
       tissue = switch(
@@ -246,7 +248,7 @@ server <- function(input, output) {
     
   #CONTOUR PLOT - Function, for generating contour plot
   draw_contour <- function(threshold, source, tissue, wavelength, power, drawgridlines, drawirrsliceline, irrslider){
-    req(threshold, source, tissue, wavelength, power, irrslider)
+    req(threshold, source, tissue, wavelength, power, irrslider, !is.null(drawgridlines), !is.null(drawirrsliceline))
     # contour plot
       contour(
         seq(-1, 1, length.out = 200),
@@ -307,8 +309,8 @@ server <- function(input, output) {
   
   # IRRADIANCE LINE PLOT - function
   draw_irr <- function(irrslider, irrslicelogplot, threshold, drawgridlines){
-    req(irrslider, threshold) 
-    sindex <- (input$irrslider + 1)*100 + 1
+    req(irrslider, threshold, !is.null(irrslicelogplot), !is.null(drawgridlines))
+    sindex <- (irrslider + 1)*100 + 1
     if(sindex > 200){
       sindex <- 200
     }
@@ -331,7 +333,7 @@ server <- function(input, output) {
     do.call(plot, plot_args)
 
     lines( # irradiance threshold
-      c(input$threshold, input$threshold),
+      c(threshold, threshold),
       c(-1, 1),
       xlim = c(-1, 1),
       ylim = c(-1, 1),
@@ -339,76 +341,7 @@ server <- function(input, output) {
     )
     par(new = TRUE)
     # grid lines
-    if (input$drawgridlines == TRUE) {
-      abline(h = (seq(-1, 1, length.out = 21)),
-             col = 'lightgray',
-             lty = 'dotted')
-      abline(h = (seq(-1, 1, length.out = 5)), col = 'lightgray')
-    }
-  }
-
-  # IRRADIANCE LINE PLOT - function
-  draw_irr_f <- function() {
-    req(
-      input$irrslider,
-      sliceData, !is.null(input$irrslicelogplot),
-      input$threshold, !is.null(input$drawgridlines)
-    )
-    sindex <- (input$irrslider + 1) * 100 + 1
-    if (sindex > 200) {
-      sindex <- 200
-    }
-    lineData <- sliceData()[sindex,]
-    if (input$irrslicelogplot == TRUE) {
-      plot(
-      # irradiance profile
-        lineData,
-        seq(-1, 1, length.out = 200),
-      # main = "Irradiance as Function of Depth",
-        xlab = "Log10 Irradiance (mW/mm^2)",
-        ylab = "Depth (mm)",
-        col = 'purple',
-        log = 'x'
-      # sub = "CITATION INFO HERE"
-      )
-    } else {
-      plot(
-      # irradiance profile
-        lineData,
-        seq(-1, 1, length.out = 200),
-      # main = "Irradiance as Function of Depth",
-        xlab = "Irradiance (mW/mm^2)",
-        ylab = "Depth (mm)",
-        col = 'purple',
-      # sub = "CITATION INFO HERE"
-      )
-    }
-    title(
-      main = sprintf(
-        "%s in %s @ %s nm\nPower: %.2f mW - Threshold: %.2f mW/mm^2",
-        input$source,
-        input$tissue,
-        input$wavelength,
-        input$power,
-        input$threshold
-      ),
-      sub = sprintf(
-        "Max Irradiance = %.2f mW/mm^2    Lateral Offset = %.2f mm",
-        max(lineData),
-        input$irrslider
-      )
-    )
-    lines(
-    # irradiance threshold
-      c(input$threshold, input$threshold),
-      c(-1, 1),
-      xlim = c(-1, 1),
-      ylim = c(-1, 1),
-      lty = 'dotted'
-    )
-    par(new = TRUE)
-    # grid lines
-    if (input$drawgridlines == TRUE) {
+    if (drawgridlines == TRUE) {
       abline(h = (seq(-1, 1, length.out = 21)),
              col = 'lightgray',
              lty = 'dotted')
