@@ -453,7 +453,7 @@ server <- function(input, output) {
     
     # List all files recursively from the root to see the whole structure
     all_files <- list.files(path = current_dir, recursive = TRUE)
-    
+
     # Print everything
     cat("Current Working Directory:\n")
     print(current_dir)
