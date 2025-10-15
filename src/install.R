@@ -4,6 +4,8 @@ install.packages("shinylive", repos = "http://cran.us.r-project.org")
 install.packages("shiny", repos = "http://cran.us.r-project.org")
 install.packages("bslib", repos = "http://cran.us.r-project.org")
 install.packages("R.matlab", repos = "http://cran.us.r-project.org")
+install.packages("jsonlite", repos = "http://cran.us.r-project.org")
+install.packages("ragg", repos = "http://cran.us.r-project.org")
+install.packages("tibble", repos = "http://cran.us.r-project.org")
 
 cat("\n\nInstall complete!")
-
