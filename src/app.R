@@ -5,11 +5,19 @@ library(R.matlab)
 library(shiny)
 library(tibble)
 
+current_dir <- getwd()
+absolute_path <- file.path(current_dir, "data/grey.mat")
+file_exists <- file.exists(absolute_path)
+if (file_exists) {
+  g <- readMat("data/grey.mat")
+  w <- readMat("data/white.mat")
+} else {
+  g <- readMat(url("https://brainstimulation.github.io/optical-irradiance-contour-webapp/data/grey.mat"))
+  w <- readMat(url("https://brainstimulation.github.io/optical-irradiance-contour-webapp/data/white.mat"))
+}
 # load slice data for plots
 #g <- readMat(url("https://brainstimulation.github.io/optical-irradiance-contour-webapp/data/grey.mat"))
 #w <- readMat(url("https://brainstimulation.github.io/optical-irradiance-contour-webapp/data/white.mat"))
-g <- readMat("data/grey.mat")
-w <- readMat("data/white.mat")
 
 source_map <- tribble(
         ~label,            ~index, ~filename_str,   ~coordsx1, ~coordsx2,
