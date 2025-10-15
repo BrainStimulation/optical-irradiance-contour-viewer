@@ -72,6 +72,7 @@ jobs:
           curl -X GET -L "https://api.figshare.com/v2/file/download/46963453" --output webapp/data/grey.mat -s &
           curl -X GET -L "https://api.figshare.com/v2/file/download/46963456" --output webapp/data/white.mat -s &
           wait
+          cp version.json webapp/version.json
           
       - name: Commit changes and push to website
         shell: bash
