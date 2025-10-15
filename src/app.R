@@ -179,7 +179,7 @@ server <- function(input, output) {
 
   # index to access from data arrays
   sliceIndex <- reactive({ 
-    req(input$wavelength, input$tissue)
+    req(input$wavelength, input$tissue, !is.null(selected_source_data()))
     # source index
     si <- selected_source_data()$index
     
@@ -239,7 +239,9 @@ server <- function(input, output) {
   
   # data for filenames of downloaded plot figures
   fnameData <- reactive({
-    req(input$tissue, input$power, input$threshold, input$irrslider, input$wavelength, !is.null(input$drawgridlines), !is.null(input$drawirrsliceline), !is.null(input$irrslicelogplot))
+    req(input$tissue, input$power, input$threshold, input$irrslider, input$wavelength,
+        !is.null(input$drawgridlines), !is.null(input$drawirrsliceline), !is.null(input$irrslicelogplot)
+        !is.null(selected_source_data()))
     list(
       source = selected_source_data()$filename_str,
       tissue = switch(
@@ -259,7 +261,7 @@ server <- function(input, output) {
     
   #CONTOUR PLOT - Function, for generating contour plot
   draw_contour <- function(threshold, source, tissue, wavelength, power, drawgridlines, drawirrsliceline, irrslider){
-    req(threshold, source, tissue, wavelength, power, irrslider, !is.null(drawgridlines), !is.null(drawirrsliceline))
+    req(threshold, source, tissue, wavelength, power, irrslider, !is.null(drawgridlines), !is.null(drawirrsliceline), !is.null(selected_source_data()))
     # contour plot
       contour(
         seq(-1, 1, length.out = 200),
@@ -446,7 +448,7 @@ server <- function(input, output) {
     file_exists <- file.exists(absolute_path)
     
     # List all files recursively from the root to see the whole structure
-    all_files <- list.files(path = "/", recursive = TRUE)
+    #all_files <- list.files(path = "/", recursive = TRUE)
     
     # Print everything
     cat("Current Working Directory:\n")
@@ -459,7 +461,7 @@ server <- function(input, output) {
     print(file_exists)
     
     cat("\nAll files in virtual file system:\n")
-    print(all_files)
+    #print(all_files)
   })
 }
 
