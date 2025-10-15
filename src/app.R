@@ -129,10 +129,7 @@ ui <- page_sidebar(
   ),
   card(
     card_body(verbatimTextOutput("version_info"))
-  ),
-card(
-  card_body(verbatimTextOutput("debug_info"))
-)
+  )
 )
 # Server logic
 server <- function(input, output) {
@@ -427,45 +424,18 @@ server <- function(input, output) {
     # The 'try' block prevents errors if the file doesn't exist during local dev
     try({
       if (file_exists) {
-        version_data <- read_json("data/version.json")
+        version_file = "data/version.json"
       } else {
-        version_data <- read_json(url("https://brainstimulation.github.io/optical-irradiance-contour-webapp/data/version.json"))
+        version_file = "version.json"
+        download.file("https://brainstimulation.github.io/optical-irradiance-contour-webapp/data/version.json", version_file)
       }
+      version_data <- read_json(version_file)
       build_date <- version_data$build_date
       git_sha <- version_data$git_sha
     }, silent = TRUE)
 
     # Combine them into a single string
     paste("Build:", build_date, "|", git_sha)
-  })
-  
-  # In your server function
-  output$debug_info <- renderPrint({
-    
-    # Get the current working directory inside the virtual file system
-    current_dir <- getwd()
-    
-    # Construct the "absolute" path to your file
-    absolute_path <- file.path(current_dir, "data/grey.mat")
-    
-    # Check if the file actually exists at that path
-    file_exists <- file.exists(absolute_path)
-    
-    # List all files recursively from the root to see the whole structure
-    all_files <- list.files(path = current_dir, recursive = TRUE)
-
-    # Print everything
-    cat("Current Working Directory:\n")
-    print(current_dir)
-    
-    cat("\nCalculated Absolute Path:\n")
-    print(absolute_path)
-    
-    cat("\nDoes the file exist at this path?\n")
-    print(file_exists)
-    
-    cat("\nAll files in virtual file system:\n")
-    print(all_files)
   })
 }
 
