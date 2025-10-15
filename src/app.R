@@ -6,18 +6,26 @@ library(shiny)
 library(tibble)
 
 current_dir <- getwd()
-absolute_path <- file.path(current_dir, "data/grey.mat")
-file_exists <- file.exists(absolute_path)
-if (file_exists) {
-  g <- readMat("data/grey.mat")
-  w <- readMat("data/white.mat")
+grey_mat_file = file.path(current_dir, "data/grey.mat")
+white_mat_file = file.path(current_dir, "data/white.mat")
+version_json_file = file.path(current_dir, "data/version.json")
+stored_data <- list(
+  grey_mat_exists = file.exists(grey_mat_file),
+  white_mat_exists = file.exists(white_mat_file),
+  version_json_exists = file.exists(version_json_file)
+)
+
+# load slice data for plots
+if (stored_data$grey_mat_exists) {
+  g <- readMat(grey_mat_file)
 } else {
   g <- readMat(url("https://brainstimulation.github.io/optical-irradiance-contour-webapp/data/grey.mat"))
+}
+if (stored_data$white_mat_exists) {
+  w <- readMat("data/white.mat")
+} else {
   w <- readMat(url("https://brainstimulation.github.io/optical-irradiance-contour-webapp/data/white.mat"))
 }
-# load slice data for plots
-#g <- readMat(url("https://brainstimulation.github.io/optical-irradiance-contour-webapp/data/grey.mat"))
-#w <- readMat(url("https://brainstimulation.github.io/optical-irradiance-contour-webapp/data/white.mat"))
 
 source_map <- tribble(
         ~label,            ~index, ~filename_str,   ~coordsx1, ~coordsx2,
@@ -392,7 +400,7 @@ server <- function(input, output) {
               data$threshold, data$gridlines, data$slice_line, data$slice_location, data$log_lin)
     },
     content = function(file){
-        png(file)
+        png(file, width = 1024, height = 1024, units = "px")
         draw_irr(
           irrslider = input$irrslider,
           irrslicelogplot = input$irrslicelogplot,
@@ -423,8 +431,8 @@ server <- function(input, output) {
     # Read version info from the JSON file
     # The 'try' block prevents errors if the file doesn't exist during local dev
     try({
-      if (file_exists) {
-        version_file = "data/version.json"
+      if (stored_data$version_json_exists) {
+        version_file = version_json_file
       } else {
         version_file = "version.json"
         download.file("https://brainstimulation.github.io/optical-irradiance-contour-webapp/data/version.json", version_file)
