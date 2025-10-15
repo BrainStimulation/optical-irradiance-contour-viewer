@@ -73,7 +73,7 @@ jobs:
           curl -X GET -L "https://api.figshare.com/v2/file/download/46963456" --output webapp/data/white.mat -s &
           wait
           cp version.json webapp/data/version.json
-          printf "include:\n  - data\n" > webapp/_config.yml
+          printf 'include: ["data/grey.mat", "data/white.mat", "data/version.json"]\n' > webapp/_config.yml
           
       - name: Commit changes and push to website
         shell: bash
