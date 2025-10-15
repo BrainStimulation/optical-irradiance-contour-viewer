@@ -74,7 +74,6 @@ jobs:
           curl -X GET -L "https://api.figshare.com/v2/file/download/46963456" --output webapp/data/white.mat -s &
           wait
           cp version.json webapp/data/version.json
-          cp viewer/src/github/deploy-pages.yml webapp/.github/workflows
 
       - name: Commit changes and push to website
         shell: bash
