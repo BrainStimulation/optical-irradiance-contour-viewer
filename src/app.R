@@ -461,7 +461,7 @@ server <- function(input, output) {
     print(file_exists)
     
     cat("\nAll files in virtual file system:\n")
-    #print(all_files)
+    print(all_files)
   })
 }
 
