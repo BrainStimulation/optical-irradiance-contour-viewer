@@ -426,7 +426,11 @@ server <- function(input, output) {
     # Read version info from the JSON file
     # The 'try' block prevents errors if the file doesn't exist during local dev
     try({
-      version_data <- read_json("version.json")
+      if (file_exists) {
+        version_data <- read_json("data/version.json")
+      } else {
+        version_data <- read_json(url("https://brainstimulation.github.io/optical-irradiance-contour-webapp/data/version.json"))
+      }
       build_date <- version_data$build_date
       git_sha <- version_data$git_sha
     }, silent = TRUE)
@@ -448,7 +452,7 @@ server <- function(input, output) {
     file_exists <- file.exists(absolute_path)
     
     # List all files recursively from the root to see the whole structure
-    #all_files <- list.files(path = "/", recursive = TRUE)
+    all_files <- list.files(path = current_dir, recursive = TRUE)
     
     # Print everything
     cat("Current Working Directory:\n")
