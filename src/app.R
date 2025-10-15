@@ -2,7 +2,6 @@
 library(bslib)
 library(jsonlite)
 library(R.matlab)
-#library(ragg)
 library(shiny)
 library(tibble)
 
@@ -31,27 +30,38 @@ source_map <- tribble(
   "OF (600 µm, NA 0.37)",   20,     "F-0600-37",    -0.300,     0.300
 )
 
+# Workaround for Chromium download bug in shinylive
+# By default the downloadButton() function creates an <a> tag with a download 
+# attribute to suggest the filename.Chromium browsers ignore this. By modifying
+# the downloadButton here, plots can be downloaded with the correct filename
+# (determined by reactive variable values) and filetype (.png).
+downloadButton <- function(...) {
+  tag <- shiny::downloadButton(...)
+  tag$attribs$download <- NULL
+  tag
+}
+
 # User interface ----
 ui <- page_sidebar(
-  title = "Optogenetics Contour Visualiser [PAPER TITLE, CITATION INFO, & DOI HERE]",
-  # SIDEBAR WITH INPUT OPTIONS
+  title = "Optogenetics Contour Visualiser App [PAPER TITLE, CITATION INFO, & DOI HERE]",
+# SIDEBAR WITH INPUT OPTIONS
   sidebar = sidebar(
     title = "Input Options",
-    # Tissue type radio buttons
+# Tissue type radio buttons
     radioButtons(
       "tissue",
       "Tissue Type",
       choices = list("Grey matter", "White matter"),
       selected = "Grey matter"
     ),
-    # Wavelength radio buttons
+# Wavelength radio buttons
     radioButtons(
       "wavelength",
       "Wavelength (nm)",
       choices = list("480", "580", "640"),
       selected = "480"
     ),
-    # source selector
+# source selector
     selectInput(
       "source",
       "Light Source",
@@ -59,7 +69,7 @@ ui <- page_sidebar(
       selected = "OF (200 µm, NA 0.37)",
       multiple = FALSE
     ),
-    # set power
+# set power
     numericInput(
       "power",
       "Total Optical Power (mW)",
@@ -67,7 +77,7 @@ ui <- page_sidebar(
       min = 0,
       step = 0.1
     ),
-    # set threshold
+# set threshold
     numericInput(
       "threshold",
       HTML("Threshold Irradiance<br/>(mW/mm^2)"),
@@ -75,25 +85,13 @@ ui <- page_sidebar(
       min = 0,
       step = 0.1
     ),
-    # gridline checkbox
-    checkboxInput(
-      "drawgridlines",
-      "Show Gridlines",
-      value = TRUE
-    ),
-    # irradiance slice on contour plot
-    checkboxInput(
-      "drawirrsliceline",
-      "Show Irradiance Plot Location",
-      value = TRUE
-    ),
-    # log plot for irradiance slice
-    checkboxInput(
-      "irrslicelogplot",
-      "Logarithmic Irradiance Plot",
-      value = FALSE
-    ),
-    # irradiance slice slider
+# gridline checkbox
+    checkboxInput("drawgridlines", "Show Gridlines", value = TRUE),
+# irradiance slice on contour plot
+    checkboxInput("drawirrsliceline", "Show Irradiance Plot Location", value = TRUE),
+# log plot for irradiance slice
+    checkboxInput("irrslicelogplot", "Logarithmic Irradiance Plot", value = FALSE),
+# irradiance slice slider
     sliderInput(
       "irrslider",
       "Irradiance Plot Location",
@@ -103,27 +101,18 @@ ui <- page_sidebar(
       step = 0.01,
       ticks = FALSE
     ),
-    # plot download buttons
-    downloadButton(
-      "downloadcontourplot",
-      "Download Contour Plot"
-    ),
-    downloadButton(
-      "downloadirrplot",
-      "Download Irradiance Plot"
-    )
+# plot download buttons
+    downloadButton("downloadcontourplot", "Download Contour Plot"),
+    downloadButton("downloadirrplot", "Download Irradiance Plot")
   ),
-  # plot and data cards
+# plot and data cards
   layout_columns(
-    card(
-      card_body(plotOutput("pdata", width = "100%", height = "500"))
-    ),
-    card(
-      card_body(plotOutput("irrplotdata"), height = "500")
-    ),
-    # col_widths = c(7, 5)
+    card(card_body(
+      plotOutput("pdata", width = "100%", height = "500")
+    )),
+    card(card_body(plotOutput("irrplotdata"), height = "500")),
+# col_widths = c(7, 5)
   ),
-  
   # summary data
   card(
     card_body(verbatimTextOutput("tdata"))
@@ -134,25 +123,26 @@ ui <- page_sidebar(
 )
 # Server logic
 server <- function(input, output) {
-  
-  # colour of contour line  
+  # colour of contour line
   pcolour <- reactive({
     req(input$wavelength)
     colour <- switch(
       input$wavelength,
-      "480" = "blue",#accurate colour is #00d5ff
-      "580" = "green",#note in reality it is yellow #ffff00
+      "480" = "blue",
+    #accurate colour is #00d5ff
+      "580" = "green",
+    #note in reality it is yellow #ffff00
       "640" = "#ff2100" #accurate to 640 nm
-      #https://academo.org/demos/wavelength-to-colour-relationship/
+    #https://academo.org/demos/wavelength-to-colour-relationship/
     )
   })
-  
+
   selected_source_data <- reactive({
     req(input$source)
     # Filter the map to find the matching row
     source_map[source_map$label == input$source, ]
   })
-  
+
   #absorption coefficient
   ua <- reactive({
     req(input$tissue, input$wavelength)
@@ -173,11 +163,10 @@ server <- function(input, output) {
       )
     }
   })
-  
+
   # index to access from data arrays
   sliceIndex <- reactive({ 
     req(input$wavelength, input$tissue)
-    
     # source index
     si <- selected_source_data()$index
     
@@ -189,26 +178,24 @@ server <- function(input, output) {
       "640" = 3
     )
     # tissue index
-    ti <- switch(
-      input$tissue,
-      "White matter" = 1,
-      "Grey matter" = 2
-    )
-    
+    ti <- switch(input$tissue,
+                 "White matter" = 1,
+                 "Grey matter" = 2)
+
     # slice index
     sliceIndex = (wi - 1) * 20 + si
   })
-  
+
   # array of data for contour and irradiance plots
-  sliceData <- reactive({ 
-    req(input$tissue, input$power, w$white, g$grey)
+  sliceData <- reactive({
+    req(input$tissue, input$power, w$white, g$grey, sliceIndex, ua)
     arr <- switch(
       input$tissue,
-      "White matter" = (input$power * w$white[, , sliceIndex()]) / (ua() * 0.000001),
-      "Grey matter" = (input$power * g$grey[, , sliceIndex()]) / (ua() * 0.000001)
+      "White matter" = (input$power * w$white[,, sliceIndex()]) / (ua() * 0.000001),
+      "Grey matter" = (input$power * g$grey[,, sliceIndex()]) / (ua() * 0.000001)
     )
   })
-  
+
   # summary data calculation for contour plot
   cData <- reactive({ 
     req(input$threshold)  
@@ -350,14 +337,85 @@ server <- function(input, output) {
       ylim = c(-1, 1),
       lty = 'dotted'
     )
-    par(new=TRUE)
+    par(new = TRUE)
     # grid lines
-    if(input$drawgridlines == TRUE){
-      abline(h=(seq(-1, 1, length.out = 21)), col = 'lightgray', lty = 'dotted')
-      abline(h=(seq(-1, 1, length.out = 5)), col = 'lightgray')
+    if (input$drawgridlines == TRUE) {
+      abline(h = (seq(-1, 1, length.out = 21)),
+             col = 'lightgray',
+             lty = 'dotted')
+      abline(h = (seq(-1, 1, length.out = 5)), col = 'lightgray')
     }
   }
-  
+
+  # IRRADIANCE LINE PLOT - function
+  draw_irr_f <- function() {
+    req(
+      input$irrslider,
+      sliceData, !is.null(input$irrslicelogplot),
+      input$threshold, !is.null(input$drawgridlines)
+    )
+    sindex <- (input$irrslider + 1) * 100 + 1
+    if (sindex > 200) {
+      sindex <- 200
+    }
+    lineData <- sliceData()[sindex,]
+    if (input$irrslicelogplot == TRUE) {
+      plot(
+      # irradiance profile
+        lineData,
+        seq(-1, 1, length.out = 200),
+      # main = "Irradiance as Function of Depth",
+        xlab = "Log10 Irradiance (mW/mm^2)",
+        ylab = "Depth (mm)",
+        col = 'purple',
+        log = 'x'
+      # sub = "CITATION INFO HERE"
+      )
+    } else {
+      plot(
+      # irradiance profile
+        lineData,
+        seq(-1, 1, length.out = 200),
+      # main = "Irradiance as Function of Depth",
+        xlab = "Irradiance (mW/mm^2)",
+        ylab = "Depth (mm)",
+        col = 'purple',
+      # sub = "CITATION INFO HERE"
+      )
+    }
+    title(
+      main = sprintf(
+        "%s in %s @ %s nm\nPower: %.2f mW - Threshold: %.2f mW/mm^2",
+        input$source,
+        input$tissue,
+        input$wavelength,
+        input$power,
+        input$threshold
+      ),
+      sub = sprintf(
+        "Max Irradiance = %.2f mW/mm^2    Lateral Offset = %.2f mm",
+        max(lineData),
+        input$irrslider
+      )
+    )
+    lines(
+    # irradiance threshold
+      c(input$threshold, input$threshold),
+      c(-1, 1),
+      xlim = c(-1, 1),
+      ylim = c(-1, 1),
+      lty = 'dotted'
+    )
+    par(new = TRUE)
+    # grid lines
+    if (input$drawgridlines == TRUE) {
+      abline(h = (seq(-1, 1, length.out = 21)),
+             col = 'lightgray',
+             lty = 'dotted')
+      abline(h = (seq(-1, 1, length.out = 5)), col = 'lightgray')
+    }
+  }
+
   # IRRADIANCE LINE PLOT - renderPlot
   output$irrplotdata <- renderPlot({
       draw_irr(
@@ -382,7 +440,7 @@ server <- function(input, output) {
       dev.off()
     }
   )
-    
+
   # DOWNLOAD IRRADIANCE PLOT
   output$downloadirrplot <- downloadHandler(
     filename = function(){
@@ -401,25 +459,24 @@ server <- function(input, output) {
         dev.off()
       }
   )
-    
+
   #SUMMARY DATA
   output$tdata <- renderText({
-      # display data on app card
-      str_irr <- sprintf("Max Irradiance:\t  %.2f mW/mm^2", cData()[1])
-      str_volume <- sprintf("\nVol. illuminated: %.3f mm^3", cData()[2])
-      str_fspread <- sprintf("\nForward spread:\t  %.2f mm", cData()[3])
-      str_bspread <- sprintf("\nBackward spread:  %.2f mm", cData()[4])
-      str_lspread <- sprintf("\nLateral spread:\t  %.2f mm", cData()[5])
-      paste(str_irr, str_volume, str_fspread, str_bspread, str_lspread)
-      
-    })
+    # display data on app card
+    str_irr <- sprintf("Max Irradiance:\t  %.2f mW/mm^2", cData()[1])
+    str_volume <- sprintf("\nVol. illuminated: %.3f mm^3", cData()[2])
+    str_fspread <- sprintf("\nForward spread:\t  %.2f mm", cData()[3])
+    str_bspread <- sprintf("\nBackward spread:  %.2f mm", cData()[4])
+    str_lspread <- sprintf("\nLateral spread:\t  %.2f mm", cData()[5])
+    paste(str_irr, str_volume, str_fspread, str_bspread, str_lspread)
+  })
 
   # RENDER VERSION INFO
   output$version_info <- renderText({
     # Initialize default values
     build_date <- "local"
     git_sha <- "dev"
-    
+
     # Read version info from the JSON file
     # The 'try' block prevents errors if the file doesn't exist during local dev
     try({
@@ -427,12 +484,11 @@ server <- function(input, output) {
       build_date <- version_data$build_date
       git_sha <- version_data$git_sha
     }, silent = TRUE)
-    
+
     # Combine them into a single string
     paste("Build:", build_date, "|", git_sha)
   })
-  
-  
 }
+
 # Run the app
 app <- shinyApp(ui = ui, server = server)
