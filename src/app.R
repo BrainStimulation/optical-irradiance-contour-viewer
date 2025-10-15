@@ -448,7 +448,7 @@ server <- function(input, output) {
     file_exists <- file.exists(absolute_path)
     
     # List all files recursively from the root to see the whole structure
-    #all_files <- list.files(path = "/", recursive = TRUE)
+    all_files <- list.files(path = "/", recursive = TRUE)
     
     # Print everything
     cat("Current Working Directory:\n")
