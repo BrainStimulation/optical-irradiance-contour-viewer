@@ -240,7 +240,7 @@ server <- function(input, output) {
   # data for filenames of downloaded plot figures
   fnameData <- reactive({
     req(input$tissue, input$power, input$threshold, input$irrslider, input$wavelength,
-        !is.null(input$drawgridlines), !is.null(input$drawirrsliceline), !is.null(input$irrslicelogplot)
+        !is.null(input$drawgridlines), !is.null(input$drawirrsliceline), !is.null(input$irrslicelogplot),
         !is.null(selected_source_data()))
     list(
       source = selected_source_data()$filename_str,
