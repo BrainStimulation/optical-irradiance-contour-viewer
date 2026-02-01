@@ -43,15 +43,9 @@ data_dir_path <- file.path(script_dir, "data")
 dir.create(data_dir_path, showWarnings = FALSE)
 
 FILES_TO_DOWNLOAD <- list(
-  grey = list(
-    article_id = 26010052,
-    file_id = 46963453,
-    dest = file.path(data_dir_path, "grey.mat")
-  ),
-  white = list(
-    article_id = 26010052,
-    file_id = 46963456,
-    dest = file.path(data_dir_path, "white.mat")
+  absorptionData = list(
+    article_id = 61413808,
+    dest = file.path(data_dir_path, 'absorptionData.mat')
   )
 )
 
